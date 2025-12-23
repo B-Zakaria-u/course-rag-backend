@@ -1,0 +1,28 @@
+version: '3.11'
+
+services:
+  chromadb:
+    image: chromadb/chroma:0.5.0
+    container_name: chromadb
+    ports:
+      - "8005:8000"
+    environment:
+      - IS_PERSISTENT=TRUE
+    volumes:
+      - chroma-data:/chroma/chroma
+
+  backend:
+    build: .
+    container_name: course-rag-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - LANGCHAIN4J_OPENAI_BASE_URL=http://host.docker.internal:1234/v1
+      - LANGCHAIN4J_OPENAI_EMBEDDING_MODEL_BASE_URL=http://host.docker.internal:1234/v1
+      - LANGCHAIN4J_OPENAI_CHAT_MODEL_BASE_URL=http://host.docker.internal:1234/v1
+      - LANGCHAIN4J_CHROMA_EMBEDDING_STORE_BASE_URL=http://chromadb:8000
+    depends_on:
+      - chromadb
+
+volumes:
+  chroma-data:

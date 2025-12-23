@@ -1,0 +1,8 @@
+ragas
+datasets
+requests
+python-dotenv
+pandas
+langchain-openai
+langchain-community
+sentence-transformers
